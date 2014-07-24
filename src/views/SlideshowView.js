@@ -34,17 +34,10 @@ define(function(require, exports, module) {
         size: [450, 500],
         data: undefined,
         lightboxOpts: {
-            inOpacity: 1,
-            outOpacity: 0,
-            inOrigin: [0, 0],
-            outOrigin: [0, 0],
-            showOrigin: [0, 0],
-            // Transform.thenMove() first applies a transform then a
-            // translation based on [x, y, z]
-            inTransform: Transform.thenMove(Transform.rotateX(0.9), [0, -300, 0]),
-            outTransform: Transform.thenMove(Transform.rotateZ(0.7), [0, window.innerHeight, -1000]),
-            inTransition: { duration: 650, curve: 'easeOut' },
-            outTransition: { duration: 500, curve: Easing.inCubic }
+            inTransform: Transform.translate(300, 0, 0),
+            outTransform: Transform.translate(-500, 0, 0),
+            inTransition: { duration: 500, curve: Easing.outBack },
+            outTransition: { duration: 350, curve: Easing.inQuad }
         } 
     };
     
