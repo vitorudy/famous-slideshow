@@ -45,7 +45,7 @@ define(function(require, exports, module) {
         });
 
         this.mainNode.add(background);
-        console.log(this);
+        // console.log(this);
         background.on('click', function() {
             // the event output handler is used to broadcast outwards
             this._eventOutput.emit('click');
