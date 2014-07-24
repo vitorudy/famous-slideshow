@@ -13,13 +13,9 @@ define(function(require, exports, module) {
     function AppView() {
         View.apply(this, arguments);
 
-        // passing in data
-        var slideshowView = new SlideshowView({
-            data: this.options.data
-        });
 
-        this.add(slideshowView);
         _createCamera.call(this);
+        _createSlideshow.call(this);
     }   
 
 
@@ -30,8 +26,13 @@ define(function(require, exports, module) {
         // it's a good idea to add a property in the default options
         // even when it's undefined    
         data: undefined,
-        cameraWidth: 0.6 * window.innerHeight
+        cameraWidth: 0.5 * window.innerHeight
     };
+
+    AppView.DEFAULT_OPTIONS.slideWidth = 0.8 * AppView.DEFAULT_OPTIONS.cameraWidth;
+    AppView.DEFAULT_OPTIONS.slideHeight = AppView.DEFAULT_OPTIONS.slideWidth + 40;
+    AppView.DEFAULT_OPTIONS.slidePosition = 0.77 * AppView.DEFAULT_OPTIONS.cameraWidth;
+
 
         function _createCamera() {
         var camera = new ImageSurface({
@@ -49,6 +50,21 @@ define(function(require, exports, module) {
         });
 
         this.add(cameraModifier).add(camera);
+    }
+
+        function _createSlideshow() {
+        var slideshowView = new SlideshowView({
+            size: [this.options.slideWidth, this.options.slideHeight],
+            data: this.options.data
+        });
+
+        var slideshowModifier = new StateModifier({
+            origin: [0.5, 0],
+            align: [0.5, 0],
+            transform: Transform.translate(0, this.options.slidePosition, 0)
+        });
+
+        this.add(slideshowModifier).add(slideshowView);
     }
 
     module.exports = AppView;
