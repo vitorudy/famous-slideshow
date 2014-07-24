@@ -6,6 +6,7 @@ define(function(require, exports, module) {
     var Transform = require('famous/core/Transform');
     var StateModifier = require('famous/modifiers/StateModifier');
     var ImageSurface = require('famous/surfaces/ImageSurface');
+    var ContainerSurface = require('famous/surfaces/ContainerSurface');
 
     // import the SlideshowView class
     var SlideshowView = require('views/SlideshowView');
@@ -52,7 +53,7 @@ define(function(require, exports, module) {
         this.add(cameraModifier).add(camera);
     }
 
-        function _createSlideshow() {
+    function _createSlideshow() {
         var slideshowView = new SlideshowView({
             size: [this.options.slideWidth, this.options.slideHeight],
             data: this.options.data
@@ -64,8 +65,16 @@ define(function(require, exports, module) {
             transform: Transform.translate(0, this.options.slidePosition, 0)
         });
 
-        this.add(slideshowModifier).add(slideshowView);
+        var slideshowContainer = new ContainerSurface({
+            properties: {
+                overflow: 'hidden'
+            }
+        });
+
+        this.add(slideshowModifier).add(slideshowContainer);
+        slideshowContainer.add(slideshowView);
     }
+
 
     module.exports = AppView;
 });
