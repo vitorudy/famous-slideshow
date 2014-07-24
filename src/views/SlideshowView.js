@@ -79,10 +79,11 @@ define(function(require, exports, module) {
         this.lightbox.show(slide);
     };
 
-    SlideshowView.prototype.showNextSlide = function() {
-        this.currentIndex++;
-        if (this.currentIndex === this.slides.length) this.currentIndex = 0;
-        this.showCurrentSlide();
+    SlideshowView.prototype.showCurrentSlide = function() {
+        var slide = this.slides[this.currentIndex];
+        this.lightbox.show(slide, function() {
+            slide.fadeIn();
+        }.bind(this));
     };
 
     module.exports = SlideshowView;

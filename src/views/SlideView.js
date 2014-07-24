@@ -9,6 +9,11 @@ define(function(require, exports, module) {
 
     var SlideData = require('data/SlideData');
 
+    var Transitionable   = require('famous/transitions/Transitionable');
+    var SpringTransition = require('famous/transitions/SpringTransition');
+
+    Transitionable.registerMethod('spring', SpringTransition);
+
     function SlideView() {
         View.apply(this, arguments);
 
@@ -33,7 +38,8 @@ define(function(require, exports, module) {
         size: [400, 450],
         filmBorder: 15,
         photoBorder:3,
-        photoUrl: SlideData.defaultImage
+        photoUrl: SlideData.defaultImage,
+        angle: -0.5
     };
 
     function _createBackground() {
@@ -90,12 +96,33 @@ define(function(require, exports, module) {
         this.photoModifier = new StateModifier({
             origin: [0.5, 0],
             align: [0.5, 0],
-            transform: Transform.translate(0, this.options.filmBorder + this.options.photoBorder, 2)
+            transform: Transform.translate(0, this.options.filmBorder + this.options.photoBorder, 2),
+            opacity: 0.1
         });
 
         this.mainNode.add(this.photoModifier).add(photo);
     }
 
+    SlideView.prototype.fadeIn = function() {
+        this.photoModifier.setOpacity(1, { duration: 1500, curve: 'easeIn' });
+        this.shake();
+    };
+
+    SlideView.prototype.shake = function() {
+        this.rootModifier.halt();
+
+        // rotates the slide view back along the top edge
+        this.rootModifier.setTransform(
+            Transform.rotateX(this.options.angle),
+            { duration: 200, curve: 'easeOut' }
+        );
+
+        // returns the slide back to 0 degress but using a spring transition
+        this.rootModifier.setTransform(
+            Transform.identity,
+            { method: 'spring', period: 600, dampingRatio: 0.15 }
+        );
+    };
 
 
     module.exports = SlideView;
